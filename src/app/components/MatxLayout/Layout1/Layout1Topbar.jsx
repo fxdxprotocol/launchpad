@@ -209,6 +209,7 @@ const Layout1Topbar = () => {
     const classes = useStyles()
     const { settings, updateSettings } = useSettings()
     const [web3Obj, setWeb3Obj] = useState(null)
+    console.log('web3', web3Obj)
 
     const isMdScreen = useMediaQuery(theme.breakpoints.down('md'))
     const fixed = settings?.layout1Settings?.topbar?.fixed
@@ -217,6 +218,7 @@ const Layout1Topbar = () => {
     const dispatch = useDispatch()
     const state = useSelector((state) => state)
     const connection = state.connection
+    console.log('conn', connection)
     const walletConnect = async () => {
         const currentProvider = new WalletConnectProvider({
             chainId: 56,
@@ -281,6 +283,11 @@ const Layout1Topbar = () => {
                         }
                     })
 
+                    window.ethereum.on('accountsChanged', function (account) {
+                        console.log('accounts', account)
+                        dispatch(updateAddress(account[0]))
+                    })
+
                     // Subscribe to session connection
                     currentProvider.on('connect', async () => {
                         let web3InstanceCopy = new Web3(currentProvider)
@@ -306,6 +313,13 @@ const Layout1Topbar = () => {
         let account, balance
         if (window.ethereum) {
             const provider = new providers.Web3Provider(window.ethereum)
+            setWeb3Obj(provider) //added provider in web3State
+
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x38' }],
+            })
+
             try {
                 await provider.send('eth_requestAccounts', [])
                 const signer = provider.getSigner()
@@ -322,6 +336,17 @@ const Layout1Topbar = () => {
         dispatch(updateAddress(account))
         dispatch(updateBalance(balance))
     }
+
+    useEffect(() => {
+        if (!web3Obj) {
+            connectWallet()
+        }
+    }, [])
+
+    window.ethereum.on('accountsChanged', function (account) {
+        console.log('accounts', account)
+        dispatch(updateAddress(account[0]))
+    })
 
     const handleNetworkModalOpen = () => {
         setOpenNetworkModal(true)
@@ -403,8 +428,10 @@ const Layout1Topbar = () => {
 
     const logoutAddress = async () => {
         dispatch(updateAddress(null))
+        console.log('web3Obj', web3Obj)
         if (web3Obj) {
-            await web3Obj.disconnect()
+            // await web3Obj?.disconnect()
+            setWeb3Obj(null)
         }
     }
     const updateSidebarMode = (sidebarSettings) => {

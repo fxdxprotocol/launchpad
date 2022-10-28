@@ -27,5 +27,3 @@ export const Store = createStore(
     initialState,
     compose(applyMiddleware(...middlewares), devtools)
 )
-
-export const persistor = persistStore(Store)

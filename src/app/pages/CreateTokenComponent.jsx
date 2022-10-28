@@ -92,12 +92,7 @@ const CreateTokenComponent = (props) => {
 
     useEffect(() => {
         if (connection && connection.chainId) {
-            setFeeAmount(
-                getFeeAmount(
-                    connection.chainId,
-                    state.token_type
-                )
-            )
+            setFeeAmount(getFeeAmount(connection.chainId, state.token_type))
         }
     }, [state, connection])
     const {
@@ -213,10 +208,7 @@ const CreateTokenComponent = (props) => {
                         }
                     )
                     const mySandardTokenFactory = new ethers.Contract(
-                        getContract(
-                            connection.chainId,
-                            'StandardTokenFactory'
-                        ),
+                        getContract(connection.chainId, 'StandardTokenFactory'),
                         StandardTokenFactory.abi,
                         signer
                     )

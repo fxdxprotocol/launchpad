@@ -15,17 +15,15 @@ const App = () => {
     return (
         <AppContext.Provider value={{ routes }}>
             <Provider store={Store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <SettingsProvider>
-                        <MatxTheme>
-                            <Router history={history}>
-                                <Switch>
-                                    <MatxLayout />
-                                </Switch>
-                            </Router>
-                        </MatxTheme>
-                    </SettingsProvider>
-                </PersistGate>
+                <SettingsProvider>
+                    <MatxTheme>
+                        <Router history={history}>
+                            <Switch>
+                                <MatxLayout />
+                            </Switch>
+                        </Router>
+                    </MatxTheme>
+                </SettingsProvider>
             </Provider>
         </AppContext.Provider>
     )

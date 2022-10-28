@@ -291,7 +291,6 @@ export function expandDecimals(n, decimals) {
     return bigNumberify(n).mul(bigNumberify(10).pow(decimals))
 }
 
-
 export function getTokenUrl(network, address) {
     if (network === BSC_TEST) {
         return 'https://testnet.bscscan.com/address/' + address
@@ -303,7 +302,6 @@ export function getTokenUrl(network, address) {
         return 'https://testnet.bscscan.com/address/' + address
     }
 }
-
 
 export function getScanUrl(chainId, address) {
     if (chainId === 1) {

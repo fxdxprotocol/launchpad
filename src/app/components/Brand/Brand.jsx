@@ -26,9 +26,7 @@ const Brand = () => {
             className={clsx('flex items-center justify-between', classes.brand)}
         >
             <div className="flex items-center">
-                <Link to="/">
-                    Home
-                </Link>
+                <Link to="/">Home</Link>
             </div>
         </div>
     )

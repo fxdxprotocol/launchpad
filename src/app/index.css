@@ -397,7 +397,7 @@
     /*padding-bottom: calc(56.25% * 0.75); !* 16:9 *!*/
     width: 640px;
     height: 360px;
-    max-width:100%;
+    max-width: 100%;
 }
 .text-primary-container input {
     color: #6ddc00 !important;
@@ -412,7 +412,6 @@
     }
 }
 @media (max-width: 480px) {
-
     .video-container {
         width: 340px;
         height: 188px;

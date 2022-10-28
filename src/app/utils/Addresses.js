@@ -15,7 +15,6 @@ export const Fee = '0.01'
 
 const CONTRACTS = {
     97: {
-       
         StandardTokenFactory: '0x125B812d93aEE89Eee75ADfC55F181fcf0dD2F60',
     },
     56: {
@@ -33,7 +32,6 @@ export const FEES = {
         Standard: '0.2',
         LiquidityGenerator: '0.2',
         BuybackBaby: '0.2',
-       
     },
 }
 

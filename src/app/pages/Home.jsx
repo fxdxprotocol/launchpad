@@ -6,8 +6,7 @@ const Home = () => {
     const selector = useSelector((state) => state)
     const connection = selector.connection
     const [launchpadInfo, setLaunchpadInfo] = React.useState({})
-    const getInfo = async () => {
-    }
+    const getInfo = async () => {}
     useEffect(() => {
         dashboard_area_mounted = true
 
@@ -18,10 +17,7 @@ const Home = () => {
         }
     }, [])
 
-    return (
-        <div id="fullpage">
-        </div>
-    )
+    return <div id="fullpage"></div>
 }
 
 export default Home
