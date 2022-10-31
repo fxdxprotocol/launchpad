@@ -300,13 +300,12 @@ const Layout1Topbar = () => {
                 })
                 .catch((err) => {})
         }
-        setWeb3Obj(currentProvider)
     }
 
     const connectWallet = async () => {
         let account, balance
-        if (web3Obj) {
-            const provider = new providers.Web3Provider(web3Obj)
+        if (window.ethereum) {
+            const provider = new providers.Web3Provider(window.ethereum)
             try {
                 await provider.send('eth_requestAccounts', [])
                 const signer = provider.getSigner()
@@ -341,8 +340,8 @@ const Layout1Topbar = () => {
         const chainId = getChainId(networkName.code)
         let account, balance
         const chainIdHex = '0x' + chainId.toString(16)
-        if (web3Obj) {
-            const provider = new providers.Web3Provider(web3Obj)
+        if (window.ethereum) {
+            const provider = new providers.Web3Provider(window.ethereum)
             try {
                 await provider.send('wallet_switchEthereumChain', [
                     { chainId: chainIdHex },
@@ -383,20 +382,13 @@ const Layout1Topbar = () => {
     }
 
     const handleWalletConnect = async (wallet) => {
-        // if(isMobile)
-        // {
-        //     window.open("https://metamask.app.link/dapp/crikit.app");
-        // }
-        if (wallet.code === 'metamask') {
+        if (isMobile) {
+            await walletConnect()
+        } else if (wallet.code === 'metamask') {
             await connectWallet() // get this value from metamask connection
-        } else {
-            // console.log('Math Wallet')
-            // await connectWallet(); // get this value from metamask connection
-            if (wallet.code === 'wallet') {
-                await walletConnect()
-            }
+        } else if (wallet.code === 'wallet') {
+            await walletConnect()
         }
-
         dispatch(updateWallet(wallet))
 
         setOpenWalletModal(false)
@@ -548,8 +540,8 @@ const Layout1Topbar = () => {
 
     function addWalletListener() {
         //TODO: implement
-        if (web3Obj) {
-            web3Obj.on('accountsChanged', (accounts) => {
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
                 console.log(accounts)
                 if (accounts.length > 0) {
                     updateAddress(accounts[0])
@@ -562,8 +554,8 @@ const Layout1Topbar = () => {
         }
     }
     function addNetworkListener() {
-        if (web3Obj) {
-            web3Obj.on('networkChanged', function (networkId) {
+        if (window.ethereum) {
+            window.ethereum.on('networkChanged', function (networkId) {
                 let n = networks.find(function (networkItem) {
                     return Number(networkItem.chainId) === Number(networkId)
                 })
