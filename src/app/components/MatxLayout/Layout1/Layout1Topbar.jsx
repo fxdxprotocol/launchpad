@@ -210,11 +210,6 @@ const Layout1Topbar = () => {
     const { settings, updateSettings } = useSettings()
     const [web3Obj, setWeb3Obj] = useState(null)
 
-    // Add State For Account
-    const [account, setAccount] = useState(null)
-    // Add State For Balance
-    const [balance, setBalance] = useState(null)
-
     const isMdScreen = useMediaQuery(theme.breakpoints.down('md'))
     const fixed = settings?.layout1Settings?.topbar?.fixed
     const [openNetworkModal, setOpenNetworkModal] = React.useState(false)
@@ -305,32 +300,29 @@ const Layout1Topbar = () => {
                 })
                 .catch((err) => {})
         }
+        setWeb3Obj(currentProvider)
     }
 
     const connectWallet = async () => {
+        let account, balance
         if (web3Obj) {
             const provider = new providers.Web3Provider(web3Obj)
             try {
                 await provider.send('eth_requestAccounts', [])
                 const signer = provider.getSigner()
-                let accountResult = await signer.getAddress()
-                let balanceResult = ethers.utils.formatEther(
-                    await signer.getBalance()
-                )
-                setAccount(accountResult)
-                setBalance(balanceResult)
-                console.log('account', account)
-                console.log('balance', balance)
-                dispatch(updateAddress(account))
-                dispatch(updateBalance(balance))
+                account = await signer.getAddress()
+                balance = ethers.utils.formatEther(await signer.getBalance())
             } catch (e) {
                 console.log('e: ', e.toString())
             }
         } else {
             toast.error(metamask_error())
         }
+        console.log('account', account)
+        console.log('balance', balance)
+        dispatch(updateAddress(account))
+        dispatch(updateBalance(balance))
     }
-    // **********
 
     const handleNetworkModalOpen = () => {
         setOpenNetworkModal(true)
@@ -347,6 +339,7 @@ const Layout1Topbar = () => {
     const switchNetwork = async (networkName) => {
         console.log('networkName: ', networkName.code)
         const chainId = getChainId(networkName.code)
+        let account, balance
         const chainIdHex = '0x' + chainId.toString(16)
         if (web3Obj) {
             const provider = new providers.Web3Provider(web3Obj)
@@ -355,12 +348,8 @@ const Layout1Topbar = () => {
                     { chainId: chainIdHex },
                 ])
                 const signer = provider.getSigner()
-                let accountResult = await signer.getAddress()
-                let balanceResult = ethers.utils.formatEther(
-                    await signer.getBalance()
-                )
-                setAccount(accountResult)
-                setBalance(balanceResult)
+                account = await signer.getAddress()
+                balance = ethers.utils.formatEther(await signer.getBalance())
                 dispatch(updateAddress(account))
                 dispatch(updateBalance(balance))
             } catch (e) {
@@ -398,19 +387,14 @@ const Layout1Topbar = () => {
         // {
         //     window.open("https://metamask.app.link/dapp/crikit.app");
         // }
-        // if (wallet.code === 'metamask') {
-        //     await connectWallet() // get this value from metamask connection
-        // } else {
-        //     // console.log('Math Wallet')
-        //     // await connectWallet(); // get this value from metamask connection
-        //     if (wallet.code === 'wallet') {
-        //         await walletConnect()
-        //     }
-        // }
         if (wallet.code === 'metamask') {
-            await connectWallet()
-        } else if (wallet.code === 'wallet') {
-            await walletConnect()
+            await connectWallet() // get this value from metamask connection
+        } else {
+            // console.log('Math Wallet')
+            // await connectWallet(); // get this value from metamask connection
+            if (wallet.code === 'wallet') {
+                await walletConnect()
+            }
         }
 
         dispatch(updateWallet(wallet))
