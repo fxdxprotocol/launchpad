@@ -308,8 +308,8 @@ const Layout1Topbar = () => {
     }
 
     const connectWallet = async () => {
-        if (window.ethereum) {
-            const provider = new providers.Web3Provider(window.ethereum)
+        if (web3Obj) {
+            const provider = new providers.Web3Provider(web3Obj)
             try {
                 await provider.send('eth_requestAccounts', [])
                 const signer = provider.getSigner()
@@ -348,8 +348,8 @@ const Layout1Topbar = () => {
         console.log('networkName: ', networkName.code)
         const chainId = getChainId(networkName.code)
         const chainIdHex = '0x' + chainId.toString(16)
-        if (window.ethereum) {
-            const provider = new providers.Web3Provider(window.ethereum)
+        if (web3Obj) {
+            const provider = new providers.Web3Provider(web3Obj)
             try {
                 await provider.send('wallet_switchEthereumChain', [
                     { chainId: chainIdHex },
@@ -564,8 +564,8 @@ const Layout1Topbar = () => {
 
     function addWalletListener() {
         //TODO: implement
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
+        if (web3Obj) {
+            web3Obj.on('accountsChanged', (accounts) => {
                 console.log(accounts)
                 if (accounts.length > 0) {
                     updateAddress(accounts[0])
@@ -578,8 +578,8 @@ const Layout1Topbar = () => {
         }
     }
     function addNetworkListener() {
-        if (window.ethereum) {
-            window.ethereum.on('networkChanged', function (networkId) {
+        if (web3Obj) {
+            web3Obj.on('networkChanged', function (networkId) {
                 let n = networks.find(function (networkItem) {
                     return Number(networkItem.chainId) === Number(networkId)
                 })
