@@ -382,13 +382,14 @@ const Layout1Topbar = () => {
     }
 
     const handleWalletConnect = async (wallet) => {
-        if (isMobile) {
-            await walletConnect()
+        if (wallet.code === 'metamask' && isMobile) {
+            window.location.href = `https://metamask.app.link/dapp/${window.location.hostname}`
         } else if (wallet.code === 'metamask') {
             await connectWallet() // get this value from metamask connection
         } else if (wallet.code === 'wallet') {
             await walletConnect()
         }
+
         dispatch(updateWallet(wallet))
 
         setOpenWalletModal(false)
